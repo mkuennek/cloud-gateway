@@ -11,7 +11,8 @@
   networking.domain = "";
   services.openssh = {
     enable = true;
-    openFirewall = false;
+    openFirewall = true;
+    ports = [ 1008 ];
   };
   users.users.root.openssh.authorizedKeys.keys = [''ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC+6kiv9H4MVDjBTsaGfE/tFAphUSLgl/12IrcTbkuU1bHqsvyRQ7B+1nvhx/aBnB1ZlaeZDK+DlY6sz++ceSOuq93UKCMYWdWVXmvncO3Gp4GyRojt7M2fOxTmT3YduiPUdJ9ovSeqW21pPn8wyMeShgf6Ob1p8ohR0gjD32YTxEtarOhvYDjdfnqc+9ieFi2jvlZxZbsNB2OHO7u0diEblRBxW4iIgC3YrM9joYxTYeGz4+VT+yPETcZ2hGViJHrSv8R63eNKJ4b3jzXOXV9n3M2VCovYiLlcYyKPDh+vgBjiuJoBaYid4GP09ls/FKf8QD46iMsccvw0EWTirKc4H18v0eTJgFgu+kT2rUflQVO2htIleaF/QixrQEFFiFbBol3eUMDyuUngOWKR7t/vaKM03Cc5wT3J5U/EKAJwD8NiNnFk9qNlva1zMTZrselrd9MEIkaliTnvIyRLCHQCMzthPtllG8j+rf7AFzrd4HkLSHigBMyUtjVl5xvCpzQT/Y0es/sgnCZl98xMIxgAqDR88b8kFfXRJU3amJJ5Ct0qQgAGQjSQojRwqy2eDH3FAXPX6qNIcdC+kZze7f4X3s/qldbN+gOnM47u3wOKVCIdA2/5xKxkLstcAA0fC5AkVdn8mXEtIXZjVVWEwAtM/IAnogAYvHfBYlSmOEIyXQ=='' ];
   system.stateVersion = "23.11";
@@ -24,6 +25,7 @@
     git
     neovim
     wget
+    lazygit
   ];
   # Set the default editor to vim
   environment.variables.EDITOR = "nvim";
@@ -66,5 +68,11 @@
   security.acme = {
     acceptTerms = true;
     defaults.email = "michael@kuenneke.cloud";
+  };
+
+  environment.shellAliases = {
+    g = "lazygit";
+    v = "nvim";
+    update = "nixos-rebuild switch";
   };
 }
