@@ -26,6 +26,7 @@
     neovim
     wget
     lazygit
+    nix-search
   ];
   # Set the default editor to vim
   environment.variables.EDITOR = "nvim";
@@ -61,6 +62,22 @@
       };
       locations."/webdav" = {
         proxyPass = "http://100.108.81.29:50004/";
+        proxyWebsockets = true;
+      };
+    };
+    virtualHosts."jellyfin.kuenneke.cloud" = {
+      addSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://nixos.tailb573c.ts.net:8096";
+        proxyWebsockets = true;
+      };
+    };
+    virtualHosts."immich.kuenneke.cloud" = {
+      addSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://nixos.tailb573c.ts.net:8088";
         proxyWebsockets = true;
       };
     };
