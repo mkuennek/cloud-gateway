@@ -45,7 +45,7 @@
 
     # allow the Tailscale UDP port through the firewall
     allowedUDPPorts = [ config.services.tailscale.port ];
-    allowedTCPPorts = [ 80 443 ];
+    allowedTCPPorts = [ 80 443 6690 ];
   };
 
   services.nginx = {
@@ -57,11 +57,15 @@
       addSSL = true;
       enableACME = true;
       locations."/" = {
-        proxyPass = "http://100.108.81.29:5040";
+        proxyPass = "http://100.108.81.29:5040/";
         proxyWebsockets = true;
       };
       locations."/webdav" = {
         proxyPass = "http://100.108.81.29:50004/";
+        proxyWebsockets = true;
+      };
+      locations."/babysmash" = {
+        proxyPass = "http://100.116.3.66:8080/";
         proxyWebsockets = true;
       };
     };
@@ -81,6 +85,17 @@
         proxyWebsockets = true;
       };
     };
+    streamConfig = ''
+      server {
+        listen 6690 ssl;
+        proxy_pass 100.108.81.29:6690;
+
+        ssl_certificate /var/lib/acme/kuenneke.cloud/fullchain.pem;
+        ssl_certificate_key /var/lib/acme/kuenneke.cloud/key.pem;
+
+        proxy_timeout 600s; 
+      }
+    '';
   };
   security.acme = {
     acceptTerms = true;
