@@ -2,6 +2,7 @@
   imports = [
     ./hardware-configuration.nix
     ./networking.nix # generated at runtime by nixos-infect
+    ./synology-cert-sync.nix
     
   ];
 
@@ -95,7 +96,6 @@
         proxyPass = "http://100.96.83.1:8123";
         proxyWebsockets = true;
 	extraConfig = ''
-	proxy_set_header Host $host;
 	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 	proxy_set_header X-Forwarded-Proto $scheme;
 	proxy_set_header Upgrade $http_upgrade;
@@ -110,7 +110,6 @@
         proxyPass = "http://100.84.213.119:8123";
         proxyWebsockets = true;
 	extraConfig = ''
-	proxy_set_header Host $host;
 	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 	proxy_set_header X-Forwarded-Proto $scheme;
 	proxy_set_header Upgrade $http_upgrade;
@@ -130,15 +129,18 @@
         proxyWebsockets = true;
       };
     };
+    # Synology Drive desktop clients use a proprietary TCP protocol on 6690.
+    # Do not terminate TLS here: the protocol starts plaintext and upgrades
+    # inside Synology Drive. Nginx must only pass TCP through; the public
+    # certificate is synced to DSM by synology-cert-sync.nix.
     streamConfig = ''
+      log_format stream '$remote_addr [$time_local] $protocol $status sent=$bytes_sent received=$bytes_received time=$session_time';
+      access_log /var/log/nginx/stream-access.log stream;
+
       server {
-        listen 6690 ssl;
+        listen 6690;
         proxy_pass 100.108.81.29:6690;
-
-        ssl_certificate /var/lib/acme/kuenneke.cloud/fullchain.pem;
-        ssl_certificate_key /var/lib/acme/kuenneke.cloud/key.pem;
-
-        proxy_timeout 600s; 
+        proxy_timeout 600s;
       }
     '';
   };
