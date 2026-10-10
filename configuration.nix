@@ -85,7 +85,7 @@
       addSSL = true;
       enableACME = true;
       locations."/" = {
-        proxyPass = "http://nixos.tailb573c.ts.net:8088";
+        proxyPass = "http://aorus.tailb573c.ts.net:8088";
         proxyWebsockets = true;
       };
     };
