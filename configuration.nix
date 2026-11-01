@@ -74,10 +74,10 @@
       };
     };
     virtualHosts."jellyfin.kuenneke.cloud" = {
-      addSSL = true;
+      forceSSL = true;
       enableACME = true;
       locations."/" = {
-        proxyPass = "http://nixos.tailb573c.ts.net:8096";
+        proxyPass = "http://aorus.tailb573c.ts.net:8096";
         proxyWebsockets = true;
       };
     };
