@@ -1,5 +1,6 @@
 { config, pkgs, ... }: {
   imports = [
+    ./maintenance.nix
     ./hardware-configuration.nix
     ./networking.nix # generated at runtime by nixos-infect
     ./synology-cert-sync.nix
