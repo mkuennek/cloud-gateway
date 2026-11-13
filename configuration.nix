@@ -118,6 +118,14 @@
 	'';
       };
     };
+    virtualHosts."todo.harsewinkel.kuenneke.cloud" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://100.84.213.119:8080";
+        proxyWebsockets = true;
+      };
+    };
     virtualHosts."roadtrip-ai.de" = {
       addSSL = true;
       enableACME = true;
