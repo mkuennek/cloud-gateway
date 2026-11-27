@@ -127,8 +127,13 @@
       };
     };
     virtualHosts."roadtrip-ai.de" = {
-      addSSL = true;
+      forceSSL = true;
       enableACME = true;
+      # Browsers that have seen the site keep using HTTPS. No includeSubDomains:
+      # other names under this domain are not guaranteed to serve TLS.
+      extraConfig = ''
+        add_header Strict-Transport-Security "max-age=31536000" always;
+      '';
       locations."/" = {
         proxyPass = "http://localhost:3000";
         proxyWebsockets = true;
@@ -137,6 +142,12 @@
         proxyPass = "http://localhost:8080";
         proxyWebsockets = true;
       };
+    };
+    # www has a DNS record; give it a certificate and send it to the bare domain.
+    virtualHosts."www.roadtrip-ai.de" = {
+      forceSSL = true;
+      enableACME = true;
+      globalRedirect = "roadtrip-ai.de";
     };
     # Synology Drive desktop clients use a proprietary TCP protocol on 6690.
     # Do not terminate TLS here: the protocol starts plaintext and upgrades
